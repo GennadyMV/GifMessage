@@ -57,6 +57,7 @@
             this.buttonWrite.TabIndex = 0;
             this.buttonWrite.Text = "Записать";
             this.buttonWrite.UseVisualStyleBackColor = true;
+            this.buttonWrite.Click += new System.EventHandler(this.buttonWrite_Click);
             // 
             // buttonRead
             // 
@@ -66,6 +67,7 @@
             this.buttonRead.TabIndex = 0;
             this.buttonRead.Text = "Прочитать";
             this.buttonRead.UseVisualStyleBackColor = true;
+            this.buttonRead.Click += new System.EventHandler(this.buttonRead_Click);
             // 
             // label1
             // 
@@ -104,7 +106,7 @@
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            this.openFileDialog1.Filter = "GIF Изображение  (*.gif)|*.gif";
+            this.openFileDialog1.Filter = "PNG Изображение  (*.png)|*.png";
             // 
             // label3
             // 
