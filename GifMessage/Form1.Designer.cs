@@ -37,6 +37,7 @@
             this.textBoxMsgOut = new System.Windows.Forms.TextBox();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.label3 = new System.Windows.Forms.Label();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.SuspendLayout();
             // 
             // buttonLoad
@@ -105,8 +106,7 @@
             // 
             // openFileDialog1
             // 
-            this.openFileDialog1.FileName = "openFileDialog1";
-            this.openFileDialog1.Filter = "PNG Изображение  (*.png)|*.png";
+            this.openFileDialog1.Filter = "GIF Изображение  (*.gif)|*.gif";
             // 
             // label3
             // 
@@ -115,6 +115,10 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(0, 13);
             this.label3.TabIndex = 3;
+            // 
+            // saveFileDialog1
+            // 
+            this.saveFileDialog1.Filter = "GIF Изображение  (*.gif)|*.gif";
             // 
             // FormMain
             // 
@@ -147,6 +151,7 @@
         private System.Windows.Forms.TextBox textBoxMsgOut;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
     }
 }
 
