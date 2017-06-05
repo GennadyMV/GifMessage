@@ -5,6 +5,8 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GifMessage", "GifMessage\GifMessage.csproj", "{093F23FA-6B69-42A8-9B1C-0494DEAFF2F2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Components", "Components\Components.csproj", "{1C3A03CA-5E55-4CC4-9746-194A4188960A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{093F23FA-6B69-42A8-9B1C-0494DEAFF2F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{093F23FA-6B69-42A8-9B1C-0494DEAFF2F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{093F23FA-6B69-42A8-9B1C-0494DEAFF2F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C3A03CA-5E55-4CC4-9746-194A4188960A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C3A03CA-5E55-4CC4-9746-194A4188960A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C3A03CA-5E55-4CC4-9746-194A4188960A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C3A03CA-5E55-4CC4-9746-194A4188960A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
