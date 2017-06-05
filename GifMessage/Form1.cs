@@ -135,14 +135,18 @@ namespace GifMessage
 
                 Set(ref byteGIF[n], 0, Get((byte)character, 7));
                 Set(ref byteGIF[n], 1, Get((byte)character, 6));
-                Set(ref byteGIF[n], 2, Get((byte)character, 5));
-                Set(ref byteGIF[n], 3, Get((byte)character, 4));                
+                n++;
+
+                Set(ref byteGIF[n], 0, Get((byte)character, 5));
+                Set(ref byteGIF[n], 1, Get((byte)character, 4));                
                 n++;
                 
                 Set(ref byteGIF[n], 0, Get((byte)character, 3));
                 Set(ref byteGIF[n], 1, Get((byte)character, 2));
-                Set(ref byteGIF[n], 2, Get((byte)character, 1));
-                Set(ref byteGIF[n], 3, Get((byte)character, 0));
+                n++;
+
+                Set(ref byteGIF[n], 0, Get((byte)character, 1));
+                Set(ref byteGIF[n], 1, Get((byte)character, 0));
                 n++;
 
             }
@@ -153,14 +157,12 @@ namespace GifMessage
 
         private int getIntFromBitArray(BitArray bitArray)
         {
-
             if (bitArray.Length > 32)
                 throw new ArgumentException("Должно быть 32 бит.");
 
             int[] array = new int[1];
             bitArray.CopyTo(array, 0);
             return array[0];
-
         }
        
         public byte[] BitArrayToByteArray(BitArray bits)
@@ -199,14 +201,18 @@ namespace GifMessage
 
                 bitsText[00 * 4 + 7] = Get(byteGIF[n], 0);
                 bitsText[00 * 4 + 6] = Get(byteGIF[n], 1);
-                bitsText[00 * 4 + 5] = Get(byteGIF[n], 2);
-                bitsText[00 * 4 + 4] = Get(byteGIF[n], 3);
+                n++;
+
+                bitsText[00 * 4 + 5] = Get(byteGIF[n], 0);
+                bitsText[00 * 4 + 4] = Get(byteGIF[n], 1);
                 n++;
 
                 bitsText[00 * 4 + 3] = Get(byteGIF[n], 0);
                 bitsText[00 * 4 + 2] = Get(byteGIF[n], 1);
-                bitsText[00 * 4 + 1] = Get(byteGIF[n], 2);
-                bitsText[00 * 4 + 0] = Get(byteGIF[n], 3);
+                n++;
+
+                bitsText[00 * 4 + 1] = Get(byteGIF[n], 0);
+                bitsText[00 * 4 + 0] = Get(byteGIF[n], 1);
                 n++;
                                 
                 byte[] bytesBack = BitArrayToByteArray(bitsText);
