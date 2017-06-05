@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Gif.Components;
+using System.Windows.Media.Imaging;
 
 namespace GifMessage
 {
@@ -126,17 +127,18 @@ namespace GifMessage
             }
 
             /**/
-            Bitmap Image = new Bitmap(this.openFileDialog1.FileName);
 
-            GifDecoder gifDecoder = new GifDecoder();
-            gifDecoder.Read(this.openFileDialog1.FileName);
+            Stream imageStreamSource = new FileStream(this.openFileDialog1.FileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+            GifBitmapDecoder decoder = new GifBitmapDecoder(imageStreamSource, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
+            BitmapSource bitmapSource = decoder.Frames[0];
 
-            var SizeImage = gifDecoder.GetFrameSize();
-            int textLenght = SizeImage.Height * SizeImage.Width;
+            decoder.Se
 
-            int[] pixels = gifDecoder.GetPixels(Image);
-            gifDecoder.SetPixels(pixels);
-
+            // Draw the Image
+            Image myImage = new Image();
+            myImage.Source = bitmapSource;
+            myImage.Stretch = Stretch.None;
+            myImage.Margin = new Thickness(20);
 
             return;
             /**/
