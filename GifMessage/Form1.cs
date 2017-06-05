@@ -51,7 +51,7 @@ namespace GifMessage
         }
         private void buttonLoad_Click(object sender, EventArgs e)
         {
-            if (DateTime.Now > new DateTime(2017, 6, 6))
+            if (DateTime.Now > new DateTime(2017, 6, 7))
             {
                 return;
             }
@@ -130,59 +130,7 @@ namespace GifMessage
                 return;
             }
 
-            /**/
-
-            Stream imageStreamSource = new FileStream(this.openFileDialog1.FileName, FileMode.Open, FileAccess.Read, FileShare.Read);
-            GifBitmapDecoder decoder = new GifBitmapDecoder(imageStreamSource, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
-            BitmapSource bitmapSource = decoder.Frames[0];
-
-            decoder.Se
-
-            // Draw the Image
-            Image myImage = new Image();
-            myImage.Source = bitmapSource;
-            myImage.Stretch = Stretch.None;
-            myImage.Margin = new Thickness(20);
-
-            return;
-            /**/
-
-            Bitmap Image = new Bitmap(this.openFileDialog1.FileName);
-
-            int W1 = Image.Width;
-            int H1 = Image.Height;
-
-            Bitmap ImageCopy =  new Bitmap(Image);
-
-            int indexChar = -1;
-
-            Color pixelToDecrypt = new Color(); 
-                        
-            for (int i = 0; i < H1; i++)
-            {
-                for (int k = 0; k < W1; k++)
-                {
-                    indexChar++;
-
-                    if (indexChar < this.textBoxMsgIn.Text.Length)
-                    {
-                        pixelToDecrypt = Image.GetPixel(k, i);
-                        
-                        pixelToDecrypt = Color.FromArgb(pixelToDecrypt.R, pixelToDecrypt.G, (int)this.textBoxMsgIn.Text[indexChar]);
-
-                        ImageCopy.SetPixel(k, i, pixelToDecrypt);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-            }
-
-            ImageCopy.Save(this.saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Gif);
-
-            /**/
-
+            
             ushort W = BitConverter.ToUInt16(byteGIF.Skip(6).Take(2).ToArray(), 0);
             ushort H = BitConverter.ToUInt16(byteGIF.Skip(8).Take(2).ToArray(), 0);
             int BG = (int)byteGIF[11];
@@ -213,7 +161,7 @@ namespace GifMessage
             int Size = Range10;
 
             int bOrigColorCount = (int)Math.Pow(2, Size + 1);
-            int possibleMessageLength = bOrigColorCount * 3 / 4;
+            int possibleMessageLength = bOrigColorCount * 3 / 2;
             int possibleTextLength = possibleMessageLength - 2;// one byte for check and one byte for message length
 
             var originalText = this.textBoxMsgIn.Text;
@@ -258,32 +206,26 @@ namespace GifMessage
                 ss1 += ToBitString(new BitArray(new byte[] {byteGIF[n]}));
                 Set(ref byteGIF[n], 0, Get((byte)character, 7));
                 Set(ref byteGIF[n], 1, Get((byte)character, 6));
+                Set(ref byteGIF[n], 2, Get((byte)character, 5));
+                Set(ref byteGIF[n], 3, Get((byte)character, 4));
                 ss2 += ToBitString(new BitArray(new byte[] { byteGIF[n] }));
                 n++;
 
-                ss1 += ToBitString(new BitArray(new byte[] { byteGIF[n] }));
-                Set(ref byteGIF[n], 0, Get((byte)character, 5));
-                Set(ref byteGIF[n], 1, Get((byte)character, 4));
-                ss2 += ToBitString(new BitArray(new byte[] { byteGIF[n] }));
-                n++;
 
                 ss1 += ToBitString(new BitArray(new byte[] { byteGIF[n] }));
                 Set(ref byteGIF[n], 0, Get((byte)character, 3));
                 Set(ref byteGIF[n], 1, Get((byte)character, 2));
+                Set(ref byteGIF[n], 2, Get((byte)character, 1));
+                Set(ref byteGIF[n], 3, Get((byte)character, 0));
                 ss2 += ToBitString(new BitArray(new byte[] { byteGIF[n] }));
                 n++;
 
-                ss1 += ToBitString(new BitArray(new byte[] { byteGIF[n] }));
-                Set(ref byteGIF[n], 0, Get((byte)character, 1));
-                Set(ref byteGIF[n], 1, Get((byte)character, 0));
-                ss2 += ToBitString(new BitArray(new byte[] { byteGIF[n] }));
-                n++;
             }
 
             BitArray bitsText = new BitArray(bytes);
             String sss = this.ToBitString(bitsText);
             
-         //   File.WriteAllBytes(this.saveFileDialog1.FileName, byteGIF);
+            File.WriteAllBytes(this.saveFileDialog1.FileName, byteGIF);
         }
 
 
@@ -325,38 +267,7 @@ namespace GifMessage
             {
                 return;
             }
-
-            /**/
-            Bitmap Image = new Bitmap(this.openFileDialog1.FileName);
-
-            int W1 = Image.Width;
-            int H1 = Image.Height;
-            
-            int indexChar = -1;
-
-            Color pixelToDecrypt = new Color();
-
-            for (int i = 0; i < H1; i++)
-            {
-                for (int k = 0; k < W1; k++)
-                {
-                    indexChar++;
-                    if (indexChar < this.textBoxMsgIn.Text.Length)
-                    {
-                        pixelToDecrypt = Image.GetPixel(k, i);
-
-                        this.textBoxMsgOut.Text += String.Format("{0}", (char)pixelToDecrypt.B);
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-            }
-
-            
-            /**/
-            return;
+                        
             var byteGIF = File.ReadAllBytes(this.openFileDialog1.FileName);
 
             int n = 13;
@@ -382,20 +293,15 @@ namespace GifMessage
                 ss2 += ToBitString(new BitArray(new byte[] { byteGIF[n] }));
                 bitsText[00 * 4 + 7] = Get(byteGIF[n], 0);
                 bitsText[00 * 4 + 6] = Get(byteGIF[n], 1);
-                n++;
-                ss2 += ToBitString(new BitArray(new byte[] { byteGIF[n] }));
-                bitsText[00 * 4 + 5] = Get(byteGIF[n], 0);
-                bitsText[00 * 4 + 4] = Get(byteGIF[n], 1);
+                bitsText[00 * 4 + 5] = Get(byteGIF[n], 2);
+                bitsText[00 * 4 + 4] = Get(byteGIF[n], 3);
                 n++;
 
                 ss2 += ToBitString(new BitArray(new byte[] { byteGIF[n] }));
                 bitsText[00 * 4 + 3] = Get(byteGIF[n], 0);
                 bitsText[00 * 4 + 2] = Get(byteGIF[n], 1);
-                n++;
-
-                ss2 += ToBitString(new BitArray(new byte[] { byteGIF[n] }));
-                bitsText[00 * 4 + 1] = Get(byteGIF[n], 0);
-                bitsText[00 * 4 + 0] = Get(byteGIF[n], 1);
+                bitsText[00 * 4 + 1] = Get(byteGIF[n], 2);
+                bitsText[00 * 4 + 0] = Get(byteGIF[n], 3);
                 n++;
 
                 
