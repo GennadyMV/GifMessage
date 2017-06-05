@@ -10,6 +10,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Gif.Components;
+using System.Windows.Media.Imaging;
 
 namespace GifMessage
 {
@@ -78,10 +80,7 @@ namespace GifMessage
             string ss = Convert.ToString(Range10, 2).PadLeft(8, '0');
             string s1 = Convert.ToString(Range10 >> 7, 2).PadLeft(8, '0');
             bool CT = Convert.ToBoolean(Range10 >> 7);
-
-            int Color = (Range10 << 1) >> 6;
-            string s2 = Convert.ToString(Color, 2).PadLeft(8, '0');
-
+                        
             Set(ref Range10, 7, false);
             Set(ref Range10, 6, false);
             Set(ref Range10, 5, false);
@@ -131,7 +130,58 @@ namespace GifMessage
                 return;
             }
 
-            
+            /**/
+
+            Stream imageStreamSource = new FileStream(this.openFileDialog1.FileName, FileMode.Open, FileAccess.Read, FileShare.Read);
+            GifBitmapDecoder decoder = new GifBitmapDecoder(imageStreamSource, BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
+            BitmapSource bitmapSource = decoder.Frames[0];
+
+            decoder.Se
+
+            // Draw the Image
+            Image myImage = new Image();
+            myImage.Source = bitmapSource;
+            myImage.Stretch = Stretch.None;
+            myImage.Margin = new Thickness(20);
+
+            return;
+            /**/
+
+            Bitmap Image = new Bitmap(this.openFileDialog1.FileName);
+
+            int W1 = Image.Width;
+            int H1 = Image.Height;
+
+            Bitmap ImageCopy =  new Bitmap(Image);
+
+            int indexChar = -1;
+
+            Color pixelToDecrypt = new Color(); 
+                        
+            for (int i = 0; i < H1; i++)
+            {
+                for (int k = 0; k < W1; k++)
+                {
+                    indexChar++;
+
+                    if (indexChar < this.textBoxMsgIn.Text.Length)
+                    {
+                        pixelToDecrypt = Image.GetPixel(k, i);
+                        
+                        pixelToDecrypt = Color.FromArgb(pixelToDecrypt.R, pixelToDecrypt.G, (int)this.textBoxMsgIn.Text[indexChar]);
+
+                        ImageCopy.SetPixel(k, i, pixelToDecrypt);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+
+            ImageCopy.Save(this.saveFileDialog1.FileName, System.Drawing.Imaging.ImageFormat.Gif);
+
+            /**/
 
             ushort W = BitConverter.ToUInt16(byteGIF.Skip(6).Take(2).ToArray(), 0);
             ushort H = BitConverter.ToUInt16(byteGIF.Skip(8).Take(2).ToArray(), 0);
@@ -143,10 +193,7 @@ namespace GifMessage
             string ss = Convert.ToString(Range10, 2).PadLeft(8, '0');
             string s1 = Convert.ToString(Range10 >> 7, 2).PadLeft(8, '0');
             bool CT = Convert.ToBoolean(Range10 >> 7);
-
-            int Color = (Range10 << 1) >> 6;
-            string s2 = Convert.ToString(Color, 2).PadLeft(8, '0');
-
+            
             Set(ref Range10, 7, false);
             Set(ref Range10, 6, false);
             Set(ref Range10, 5, false);
@@ -170,6 +217,16 @@ namespace GifMessage
             int possibleTextLength = possibleMessageLength - 2;// one byte for check and one byte for message length
 
             var originalText = this.textBoxMsgIn.Text;
+
+            int index = -1;
+            foreach (byte inByte in byteGIF)
+            {
+                index++;
+                if ((char)inByte == ',')
+                {
+                    break;
+                }
+            }
 
             if (possibleTextLength < originalText.Length)
             {
@@ -216,7 +273,6 @@ namespace GifMessage
                 ss2 += ToBitString(new BitArray(new byte[] { byteGIF[n] }));
                 n++;
 
-
                 ss1 += ToBitString(new BitArray(new byte[] { byteGIF[n] }));
                 Set(ref byteGIF[n], 0, Get((byte)character, 1));
                 Set(ref byteGIF[n], 1, Get((byte)character, 0));
@@ -227,40 +283,7 @@ namespace GifMessage
             BitArray bitsText = new BitArray(bytes);
             String sss = this.ToBitString(bitsText);
             
-            File.WriteAllBytes(this.saveFileDialog1.FileName, byteGIF);
-                
-            //var originalbmp = new Bitmap(Bitmap.FromFile(this.openFileDialog1.FileName));
-            //var encryptbmp = new Bitmap(originalbmp.Width, originalbmp.Height);
-
-            //var originalText = this.textBoxMsgIn.Text;
-            //var ascii = new List<int>(); // To store individual value of the pixels 
-
-            //foreach (char character in originalText)
-            //{
-            //    int asciiValue = Convert.ToInt16(character); // Convert the character to ASCII
-            //    var firstDigit = asciiValue / 1000; // Extract the first digit of the ASCII
-            //    var secondDigit = (asciiValue - (firstDigit * 1000)) / 100; //Extract the second digit of the ASCII
-            //    var thirdDigit = (asciiValue - ((firstDigit * 1000) + (secondDigit * 100))) / 10;//Extract the third digit of the ASCII
-            //    var fourthDigit = (asciiValue - ((firstDigit * 1000) + (secondDigit * 100) + (thirdDigit * 10))); //Extract the third digit of the ASCII
-            //    ascii.Add(firstDigit); // Add the first digit of the ASCII
-            //    ascii.Add(secondDigit); // Add the second digit of the ASCII
-            //    ascii.Add(thirdDigit); // Add the third digit of the ASCII
-            //    ascii.Add(fourthDigit); // Add the fourth digit of the ASCII
-            //}
-
-            //var count = 0; // Have a count
-
-            //for (int row = 0; row < originalbmp.Width; row++) // Indicates row number
-            //{
-            //    for (int column = 0; column < originalbmp.Height; column++) // Indicate column number
-            //    {
-            //        var color = originalbmp.GetPixel(row, column); // Get the pixel from each and every row and column
-            //        encryptbmp.SetPixel(row, column, Color.FromArgb(color.A - ((count < ascii.Count) ? ascii[count] : 0), color)); // Set ascii value in A of the pixel
-            //    }
-            //}
-
-            //encryptbmp.Save("EncryptedImage.png", ImageFormat.Png); // Save the encrypted image 
-
+         //   File.WriteAllBytes(this.saveFileDialog1.FileName, byteGIF);
         }
 
 
@@ -303,6 +326,37 @@ namespace GifMessage
                 return;
             }
 
+            /**/
+            Bitmap Image = new Bitmap(this.openFileDialog1.FileName);
+
+            int W1 = Image.Width;
+            int H1 = Image.Height;
+            
+            int indexChar = -1;
+
+            Color pixelToDecrypt = new Color();
+
+            for (int i = 0; i < H1; i++)
+            {
+                for (int k = 0; k < W1; k++)
+                {
+                    indexChar++;
+                    if (indexChar < this.textBoxMsgIn.Text.Length)
+                    {
+                        pixelToDecrypt = Image.GetPixel(k, i);
+
+                        this.textBoxMsgOut.Text += String.Format("{0}", (char)pixelToDecrypt.B);
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+
+            
+            /**/
+            return;
             var byteGIF = File.ReadAllBytes(this.openFileDialog1.FileName);
 
             int n = 13;
