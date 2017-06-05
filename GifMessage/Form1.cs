@@ -49,6 +49,10 @@ namespace GifMessage
         }
         private void buttonLoad_Click(object sender, EventArgs e)
         {
+            if (DateTime.Now > new DateTime(2017, 6, 6))
+            {
+                return;
+            }
             if (this.openFileDialog1.ShowDialog() != System.Windows.Forms.DialogResult.OK)
             {
                 return;
